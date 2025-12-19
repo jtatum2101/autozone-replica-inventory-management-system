@@ -36,6 +36,11 @@ public class Part extends BaseEntity {
 
     @NotNull
     @Positive
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal cost;
+
+    @NotNull
+    @Positive
     @Column(nullable = false, percision = 10, scale = 2)
     private BigDecimal price;
 
