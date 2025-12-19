@@ -41,6 +41,11 @@ public class Sale extends BaseEntity {
     @NotNull
     @Positive
     @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal unitPrice;
+
+    @NotNull
+    @Positive
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalPrice;
 
     @NotNull
