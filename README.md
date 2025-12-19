@@ -118,7 +118,7 @@ The system calculates optimal reorder points using weighted sales velocity analy
 
 1. **Clone the repository**
 ```bash
-git clone <repository-url>
+git clone https://github.com/jtatum2101/autozone-replica-inventory-management-system.git
 cd inventory-system
 ```
 
