@@ -3,9 +3,9 @@ spring:
     name: autozone-inventory-system
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/autozone_inventory
+    url: jdbc:postgresql://localhost:5433/autozone_inventory
     username: autozone_user
-    password: autozone_pass
+    password: password123
     driver-class-name: org.postgresql.Driver
 
   jpa:
