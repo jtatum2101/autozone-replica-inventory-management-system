@@ -1,7 +1,7 @@
 package com.autozone.inventory.entity;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
         @Index(name = "idx_sale_date", columnList = "saleDate"),
         @Index(name = "idx_part_store", columnList = "part_id, store_id")
 })
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Getter
 @Setter
 @NoArgsConstructor
