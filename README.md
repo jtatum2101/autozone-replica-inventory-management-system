@@ -429,6 +429,39 @@ This project demonstrates proficiency in:
 
 ---
 
+## 🎨 Frontend Dashboard
+An interactive React dashboard is available for this system:
+
+**Repository**: [autozone-replica-inventory-frontend] (https://github.com/jtatum2101/autozone-replica-inventory-frontend)
+
+**Features**:
+- Real-time inventory monitoring 
+- Smart search and filtering 
+- Interactive reorder management
+- Store-specific analytics
+- Responsive design with Tailwind CSS
+
+### Running the Full Stack
+
+1. **Start the backend** (this repo):
+```bash
+docker compose up -d
+./mvnw spring-boot:run
+```
+2. **Start the frontend**:
+```bash
+cd ../inventory-frontend
+npm install
+npm run dev
+```
+
+3. **Access the application**:
+- Backend API: `http://localhost:8080`
+- Swagger Docs: `http://localhost:8080/swagger-ui.html`
+- Frontend Dashboard: `http://localhost:5173`
+
+---
+
 ## 📄 License
 
 This project was created for educational and demonstration purposes.

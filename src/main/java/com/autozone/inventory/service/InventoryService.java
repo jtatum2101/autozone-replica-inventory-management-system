@@ -74,19 +74,19 @@ public class InventoryService {
 
         //Get sales data for different periods
 
-        Integer sales30Days = saleRepository.getTotalQuantitySold(part, store, now.minusDays(30));
-        Integer sales60Days = saleRepository.getTotalQuantitySold(part, store, now.minusDays(60));
-        Integer sales90Days = saleRepository.getTotalQuantitySold(part, store, now.minusDays(90));
+        Integer sold30 = saleRepository.getTotalQuantitySold(part.getId(), store.getId(), now.minusDays(30), now);
+        Integer sold60 = saleRepository.getTotalQuantitySold(part.getId(), store.getId(), now.minusDays(60), now);
+        Integer sold90 = saleRepository.getTotalQuantitySold(part.getId(), store.getId(), now.minusDays(90), now);
 
         // Calculate average daily sales with weighted average (recent data weighted more)
 
-        double dailySales30 = sales30Days / 30.0;
-        double dailySales60 = sales60Days / 60.0;
-        double dailySales90 = sales90Days / 90.0;
+        double dailyVelocity30 = sold30 != null ? sold30 / 30.0 : 0;
+        double dailyVelocity60 = sold60 != null ? sold60 / 60.0 : 0;
+        double dailyVelocity90 = sold90 != null ? sold90 / 90.0 : 0;
 
         //Weighted average: 50% weight on last 30 days, 30% on 60 days, 20% on 90 days
 
-        double weightedDailySales = (dailySales30 * 0.5) + (dailySales60 * 0.3) + (dailySales90 * 0.2);
+        double weightedDailySales = (dailyVelocity30 * 0.5) + (dailyVelocity60 * 0.3) + (dailyVelocity90 * 0.2);
 
         //Calculate reorder point: (average daily sales * lead time) + safety stock
 
@@ -106,12 +106,12 @@ public class InventoryService {
         LocalDateTime now = LocalDateTime.now();
 
         // Get 30-day sales trend
-        Integer sales30Days = saleRepository.getTotalQuantitySold(part, store, now.minusDays(30));
-        double dailySales = sales30Days / 30.0;
+        Integer sold30Days = saleRepository.getTotalQuantitySold(part.getId(), store.getId(), now.minusDays(30), now);
+        double dailyVelocity = sold30Days != null ? sold30Days / 30.0 : 0;
 
         // Order enough to last 30-45 days
         int targetDays = 30;
-        int optimalQuantity = (int) Math.ceil(dailySales * targetDays);
+        int optimalQuantity = (int) Math.ceil(dailyVelocity * targetDays);
 
         // Don't exceed max stock level
         int currentStock = inventory.getQuantity();
