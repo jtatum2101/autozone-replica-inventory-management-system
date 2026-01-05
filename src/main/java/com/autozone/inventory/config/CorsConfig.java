@@ -7,6 +7,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 public class CorsConfig {
@@ -17,17 +18,18 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         // Allow requests from React dev server
-        config.setAllowedOrigins(Arrays.asList("http://localhost:5174"));
+        config.setAllowedOriginPatterns(Arrays.asList("http://localhost:*"));
 
         // Allow all HTTP methods
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
 
         // Allow all headers
-        config.setAllowedHeaders(Arrays.asList("*"));
+        config.setAllowedHeaders(List.of("*"));
 
         // Allow credentials
         config.setAllowCredentials(true);
 
+        // Apply to all endpoints
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
