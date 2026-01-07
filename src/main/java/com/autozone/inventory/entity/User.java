@@ -3,7 +3,6 @@ package com.autozone.inventory.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.HashSet;
@@ -19,30 +18,43 @@ import java.util.Set;
 public class User extends BaseEntity {
 
     @NotBlank
-    @Size(min = 3, max = 50)
     @Column(unique = true, nullable = false)
     private String username;
 
     @NotBlank
-    @Email
-    @Column(unique = true, nullable = false)
-    private String email;
-
-    @NotBlank
-    @Size(min = 60, max = 100)
     @Column(nullable = false)
     private String password;
 
+    @Email
+    @NotBlank
+    @Column(unique = true, nullable = false)
+    private String email;
+
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
     @Column(nullable = false)
+    @Builder.Default
     private Boolean enabled = true;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
     @Column(name = "role")
     @Builder.Default
-    private Set<String> roles = new HashSet<>();
+    private Set<UserRole> roles = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_id")
-    private Store store;
+    public enum UserRole {
+        ADMIN,
+        MANAGER,
+        EMPLOYEE
+    }
+
+    // Lombok generates getEnabled() automatically, but let's add a convenience method
+    public Boolean getEnabled() {
+        return enabled != null ? enabled : false;
+    }
 }

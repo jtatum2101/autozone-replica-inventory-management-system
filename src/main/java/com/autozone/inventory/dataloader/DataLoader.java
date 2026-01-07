@@ -5,6 +5,7 @@ import com.autozone.inventory.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -22,18 +23,22 @@ public class DataLoader implements CommandLineRunner {
     private final PartRepository partRepository;
     private final InventoryRepository inventoryRepository;
     private final SaleRepository saleRepository;
+    private final UserRepository userRepository;
 
     private final Random random = new Random();
 
     @Override
     public void run(String... args) {
-        // Only load data if database is empty
+        log.info("Loading seed data...");
+
+        // Always try to create users (it checks internally)
+        createTestUsers();
+
+        // Only load other data if database is empty
         if (storeRepository.count() > 0) {
-            log.info("Database already contains data. Skipping seed data.");
+            log.info("Store data already exists. Skipping store/part/inventory seed data.");
             return;
         }
-
-        log.info("Loading seed data...");
 
         // Create stores
         List<Store> stores = createStores();
@@ -52,6 +57,54 @@ public class DataLoader implements CommandLineRunner {
         log.info("Created {} sales records", salesCount);
 
         log.info("Seed data loading completed!");
+    }
+
+    private void createTestUsers() {
+        // Only create if no users exist
+        if (userRepository.count() > 0) {
+            log.info("Users already exist. Skipping user creation.");
+            return;
+        }
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+        // Admin user
+        User admin = User.builder()
+                .username("admin")
+                .password(passwordEncoder.encode("admin123"))
+                .email("admin@autozone.com")
+                .firstName("Admin")
+                .lastName("User")
+                .enabled(true)
+                .build();
+        admin.getRoles().add(User.UserRole.ADMIN);
+        userRepository.save(admin);
+
+        // Manager user
+        User manager = User.builder()
+                .username("manager")
+                .password(passwordEncoder.encode("manager123"))
+                .email("manager@autozone.com")
+                .firstName("Store")
+                .lastName("Manager")
+                .enabled(true)
+                .build();
+        manager.getRoles().add(User.UserRole.MANAGER);
+        userRepository.save(manager);
+
+        // Employee user
+        User employee = User.builder()
+                .username("employee")
+                .password(passwordEncoder.encode("employee123"))
+                .email("employee@autozone.com")
+                .firstName("Store")
+                .lastName("Employee")
+                .enabled(true)
+                .build();
+        employee.getRoles().add(User.UserRole.EMPLOYEE);
+        userRepository.save(employee);
+
+        log.info("Created 3 test users (admin, manager, employee)");
     }
 
     private List<Store> createStores() {
