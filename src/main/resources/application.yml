@@ -2,14 +2,14 @@ spring:
   application:
     name: inventory-system
   datasource:
-    url: jdbc:postgresql://localhost:5433/autozone_inventory
-    username: autozone_user
-    password: autozone_pass
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/autozone_inventory}
+    username: ${SPRING_DATASOURCE_USERNAME:autozone_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:autozone_pass}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
@@ -18,9 +18,9 @@ spring:
     open-in-view: true
 
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 # JWT Configuration
 jwt:
-  secret: "your-secret-key-change-this-in-production-make-it-at-least-256-bits-long-for-security"
-  expiration: 86400000  # 24 hours in milliseconds
+  secret: ${JWT_SECRET:your-secret-key-change-this-in-production}
+  expiration: ${JWT_EXPIRATION:86400000}
